@@ -1,0 +1,95 @@
+{% extends "base.njk" %} {% block title %} Get yourself register {% endblock %}
+{% block content %} {% if message %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Hey there!</strong> {{message}}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+
+{% endif %}
+
+<div class="container my-5">
+  <h1 class="display-6 d-flex justify-content-center mb-5">
+    Get yourself register here.
+  </h1>
+  <form action="/register" method="post">
+    <div class="row g-3">
+      <div class="col">
+        <label for="first_name" class="form-label">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Sheldon"
+          aria-label="First name"
+          name="first_name"
+          required
+        />
+      </div>
+      <div class="col">
+        <label for="last_name" class="form-label">Last Name</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Cooper"
+          aria-label="Last name"
+          name="last_name"
+        />
+      </div>
+      <div class="row g-3">
+        <div class="col">
+          <label for="email_address" class="form-label">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="sheldon.cooper@example.com"
+            name="email"
+            required
+          />
+        </div>
+        <div class="col">
+          <label for="phone_number" class="form-label">Phone Number</label>
+          <input
+            type="text"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="+1 1234567890"
+            name="phone_number"
+            required
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Enter your password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="exampleFormControlInput1"
+          placeholder="* * * * * *"
+          name="password1"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Confirm your password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="exampleFormControlInput1"
+          placeholder="* * * * * *"
+          name="password2"
+          required
+        />
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Register</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

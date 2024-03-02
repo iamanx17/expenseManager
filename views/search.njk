@@ -1,0 +1,41 @@
+{% extends "base.njk" %} {% block title %} Expense Manager | Dashboard {%
+endblock %} {% block content %}
+
+<div class="container my-5">
+  <h1 class="display-6 d-flex justify-content-center mb-5">
+    {{heading}} "{{ tag_name }}"
+  </h1>
+  <ol class="list-group list-group-numbered">
+    {% for item in transactions %}
+
+    <li
+      class="list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div class="ms-2 me-auto">
+        <div class="fw-bold">
+          {{ item.transactions_category.category_name }}
+        </div>
+        {{ item.transactions_note }}
+        <div>
+          {% for tags in item.transactions_tags %}
+          <span class="badge text-bg-secondary">#{{ tags.tag_name }}</span>
+
+          {% endfor %}
+          <p>{{ item.created_at }}</p>
+        </div>
+      </div>
+      {% if item.transaction_type == "credit" %}
+      <span class="badge text-bg-success rounded-pill">
+        +₹ {{ item.transaction_amount }}</span
+      >
+      {% else %}
+      <span class="badge text-bg-danger rounded-pill">
+        -₹ {{ item.transaction_amount }}</span
+      >
+      {% endif %}
+    </li>
+
+    {% endfor %}
+  </ol>
+</div>
+{% endblock %}

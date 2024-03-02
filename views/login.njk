@@ -1,0 +1,49 @@
+{% extends "base.njk" %} {% block title %} Login {% endblock %} {% block content
+%}
+
+<div class="container my-5">
+  {% if message %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Hey there!</strong> {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+
+  {% endif %}
+  <h1 class="display-6 d-flex justify-content-center mb-5">Login here.</h1>
+  <form action="/login" method="post">
+    <div class="row g-3">
+      <div class="col-6">
+        <label for="email_address" class="form-label">Email address</label>
+        <input
+          type="email"
+          class="form-control"
+          id="exampleFormControlInput1"
+          placeholder="sheldon.cooper@example.com"
+          name="email"
+          required
+        />
+      </div>
+      <div class="col-6">
+        <label for="password" class="form-label">Enter your password</label>
+        <input
+          type="text"
+          class="form-control"
+          id="exampleFormControlInput1"
+          placeholder="* * * * * *"
+          name="password"
+          required
+        />
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-danger">Login</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

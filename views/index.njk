@@ -1,0 +1,210 @@
+{% extends "base.njk" %} {% block title %} Expense Manager | Dashboard {%
+endblock %} {% block content %}
+
+<div class="container my-5">
+  <h1 class="display-6 d-flex justify-content-center mb-5">
+    Your Transactions ({{ total_transactions }})
+  </h1>
+  <div class="container my-5 d-flex justify-content-center">
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+      <button type="button" class="btn btn-primary">
+        Total transactions ₹{{ transaction_amount }}/-
+      </button>
+      <button type="button" class="btn btn-success">
+        Credited ₹{{ credit_amount }}/-
+      </button>
+      <button type="button" class="btn btn-danger">
+        Debited ₹{{ debit_amount }}/-
+      </button>
+      <button type="button" class="btn btn-secondary">
+        Net balance ₹{{ credit_amount - debit_amount }}/-
+      </button>
+      <button
+        type="button"
+        class="btn btn-info"
+        data-bs-toggle="modal"
+        data-bs-target="#createbudget"
+      >
+        create budget ($)
+      </button>
+    </div>
+  </div>
+  <div class="container my-5">
+    <h4 class="display-6 d-flex justify-content-center mb-5">Budgets</h4>
+    <div class="accordion" id="accordionExample">
+      {% for budget in budgets %}
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#{{ budget._id }}"
+            aria-expanded="true"
+            aria-controls="{{ budget._id }}"
+          >
+           {{ budget.budget_name }}
+          </button>
+        </h2>
+        <div
+          id="{{ budget._id }}"
+          class="accordion-collapse collapse show"
+          data-bs-parent="#accordionExample"
+        >
+          <div class="accordion-body">
+            <div
+              class="progress"
+              role="progressbar"
+              aria-label="Animated striped example"
+              aria-valuenow="{{ budget.percentage_used }}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                style="width: 20%"
+              ></div>
+            </div>
+            Rs {{ budget.amount_used }}/ Rs {{ budget.budget_total }}
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+  <ol class="list-group list-group-numbered">
+    {% for item in transactions %}
+
+    <li
+      class="list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div class="ms-2 me-auto">
+        <div class="fw-bold">
+          {{ item.transactions_category.category_name }}
+        </div>
+        {{ item.transactions_note }}
+        <div>
+          {% for tags in item.transactions_tags %}
+          <span class="badge text-bg-secondary"
+            ><a class="text-decoration-none" href="/tags/{{ tags._id }}">
+              #{{ tags.tag_name }}></a
+            ></span
+          >
+
+          {% endfor %}
+          <p>{{ item.created_at }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          {% if item.transaction_type == "credit" %}
+          <span class="badge text-bg-success rounded-pill">
+            +₹ {{ item.transaction_amount }}</span
+          >
+          {% else %}
+          <span class="badge text-bg-danger rounded-pill">
+            -₹ {{ item.transaction_amount }}</span
+          >
+          {% endif %}
+        </div>
+        <div class="col">
+          <form method='post' action="/deletetransactions/{{item._id}}">
+          <button
+            class="btn btn-danger"
+            type="submit"
+          >
+            Delete
+          </button>
+          </form>
+        </div>
+      </div>
+    </li>
+
+    {% endfor %}
+  </ol>
+</div>
+
+<div
+  class="modal fade"
+  id="createbudget"
+  tabindex="-1"
+  aria-labelledby="createbudget"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="createbudget">Create Your Budget</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form action="/budget" method="post">
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-12 my-3">
+              <label for="budget_name" class="form-label"
+                >Enter your budget name</label
+              >
+              <input
+                type="text1"
+                class="form-control"
+                placeholder="construction"
+                aria-label="budget_name"
+                name="budget_name"
+                required
+              />
+            </div>
+            <div class="col-12 my-3">
+              <label for="budget_category" class="form-label"
+                >Select your category for budget</label
+              >
+              <select
+                class="form-select"
+                aria-label="Select your category"
+                name="category_name"
+              >
+                <option selected>Select your category</option>
+                {% if category %} {% for item in category %}
+                <option value="{{ item._id }}">
+                  {{ item.category_name }}
+                </option>
+
+                {% endfor %} {% endif %}
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="budget_amount" class="form-label"
+                >Define your budget amount</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                placeholder="95000/-"
+                aria-label="budget_amount"
+                name="budget_amount"
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

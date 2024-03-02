@@ -1,0 +1,143 @@
+{% extends "base.njk" %} {% block title %} Add your tags {% endblock %} {% block
+content %}
+
+<div class="container my-5 mx-auto">
+  {% if message %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Hey there!</strong> {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endif %}
+
+  <h1
+    class="display-6 d-flex justify-content-center mb-5 pb-2 border-secondary border-2 border-bottom"
+  >
+    Manage your Categories
+    <p></p>
+  </h1>
+  <div class="row g-3">
+    <div class="col-4">
+      <ul class="list-group">
+        {% if category %} {% for item in category %}
+        <li class="list-group-item">
+          {{ item.category_name }}
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-info btn-md edit-cat-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#editCat"
+              data-cat-name="{{ item.category_name }}"
+              data-cat-id="{{ item._id }}"
+            >
+              Edit
+            </button>
+          </div>
+        </li>
+
+        {% endfor %} {% else %}
+        <li class="list-group-item">
+          Please add category to make them appear here.
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+    <div class="col-8">
+      <form action="/category" method="post">
+        <div class="col mb-3">
+          <label for="tag" class="form-label">Add your Category</label>
+          <input
+            type="text"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="Food & drinks"
+            name="category_name"
+            required
+          />
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--edit cat modal-->
+
+<div
+  class="modal fade"
+  id="editCat"
+  tabindex="-1"
+  aria-labelledby="editCat"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editCat">Edit your category</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="col mb-4">
+          <form method="post" id="editCatForm">
+            <div class="row">
+              <div class="col">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editCatInput"
+                  name="edit_cat_name"
+                  required
+                />
+              </div>
+              <div class="col">
+                <button type="submit my-3" class="btn btn-primary">save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <form method="post" id="delete_cat">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block script %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const editCatButtons = document.querySelectorAll(".edit-cat-btn");
+    const tagInput = document.getElementById("editCatInput");
+    const editCatForm = document.getElementById("editCatForm");
+    const deleteCatForm = document.getElementById("delete_cat");
+    editCatButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const catValue = button.getAttribute("data-cat-name");
+        const catId = button.getAttribute("data-cat-id");
+        tagInput.value = catValue;
+        editCatForm.action = `/editcategory/${catId}`;
+        deleteCatForm.action = `/deletecategory/${catId}`;
+      });
+    });
+  });
+</script>
+
+{% endblock %}

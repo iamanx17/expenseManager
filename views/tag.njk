@@ -1,0 +1,128 @@
+{% extends "base.njk" %} {% block title %} Add your tags {% endblock %} {% block
+content %}
+
+<div class="container my-5">
+  <h1
+    class="display-6 d-flex justify-content-center my-5 pb-2 border-bottom border-2 border-secondary"
+  >
+    Manage your tags
+  </h1>
+  <div class="row">
+    <div class="col-4">
+      <ul class="list-group">
+        {% if tags %} {% for item in tags %}
+        <li class="list-group-item">
+          {{ item.tag_name }}
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-info btn-md edit-tag-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#editTag"
+              data-tag-name="{{ item.tag_name }}"
+              data-id-name="{{ item._id }}"
+            >
+              Edit
+            </button>
+          </div>
+        </li>
+        {% endfor %} {% else %}
+        <li class="list-group-item">
+          Please add tags to make them appear here.
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+    <div class="col-8">
+      <form action="/tags" method="post">
+        <div class="col mb-4">
+          <label for="tag" class="form-label">Add your tag</label>
+          <input
+            type="text"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="material"
+            name="tag_name"
+            required
+          />
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--modal -->
+<div
+  class="modal fade"
+  id="editTag"
+  tabindex="-1"
+  aria-labelledby="editTag"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editTag">Edit your tag</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="col mb-4">
+          <form method="post" id="editTagForm">
+            <div class="row">
+              <div class="col">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editTagInput"
+                  name="edit_tag_name"
+                  required
+                />
+              </div>
+              <div class="col">
+                <button type="submit my-3" class="btn btn-primary">save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <form method="post" id="delete_tag">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block script %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("Event is triggere");
+    const editButton = document.querySelectorAll(".edit-tag-btn");
+    const fetchForm = document.getElementById("editTagForm");
+    const editInput = document.getElementById("editTagInput");
+    const fetchdeleteForm = document.getElementById("delete_tag");
+    console.log(fetchdeleteForm);
+    editButton.forEach((button) => {
+      button.addEventListener("click", () => {
+        const tagName = button.getAttribute("data-tag-name");
+        const idName = button.getAttribute("data-id-name");
+        editInput.value = tagName;
+        fetchForm.action = `/edittag/${idName}`;
+        fetchdeleteForm.action = `/deletetag/${idName}`;
+        console.log(fetchdeleteForm);
+      });
+    });
+  });
+</script>
+{% endblock %}
